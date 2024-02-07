@@ -26,3 +26,6 @@ Just run the game on linux folder.
 ```terminal
 $ ./linux/main.out
 ```
+
+# References
+- https://github.com/tsoding/raylib.js
