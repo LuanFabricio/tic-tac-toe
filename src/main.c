@@ -12,6 +12,8 @@ const Line board_lines[] = {
 };
 
 static int x = 0;
+const int LINE_COLOR = 0xff1111ff;
+const int BACKGROUND_COLOR = 0xff000000;
 
 void draw_loop() {
 	float dt = get_delta_time();
@@ -27,23 +29,23 @@ void draw_loop() {
 
 	begin_draw();
 
-	clear_window(0xff000000);
+	clear_window(BACKGROUND_COLOR);
 
 	// draw_rectangle(x, 2, 300, 400, 0xffff0000);
 
+	draw_rectangle(mouse_x-25, mouse_y-25, 50, 50, 0xffffffff);
+
 	for (int i = 0; i < 6; i++) {
 		Line l = board_lines[i];
-		draw_line(l.p1.x, l.p1.y, l.p2.x, l.p2.y, 0xff000000);
+		draw_line(l.p1.x, l.p1.y, l.p2.x, l.p2.y, LINE_COLOR);
 	}
-
-	draw_rectangle(mouse_x-50, mouse_y-50, 100, 100, 0xff999999);
 
 	end_draw();
 }
 
 int main(void)
 {
-	init_window(800, 600, "Test");
+	init_window(800, 600, "Tic-tac-toe");
 
 #ifdef PLATFORM_WEB
 	set_game_loop_func(draw_loop);
