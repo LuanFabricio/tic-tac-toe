@@ -103,16 +103,19 @@ class Game {
 						this.ctx.fillRect(x, y, width, height);
 					},
 					draw_line: (x0, y0, x1, y1, color) => {
-						this.ctx.fillStyle = color_to_hex(color);
 						this.ctx.beginPath();
 						this.ctx.moveTo(x0, y0);
 						this.ctx.lineTo(x1, y1);
+
+						this.ctx.lineWidth = 1.75;
+						this.ctx.strokeStyle = color_to_hex(color);
 						this.ctx.stroke();
 					},
 					clear_window: (color) => {
 						const { width, height } = this.ctx.canvas;
-						this.ctx.fillStyle = color_to_hex(color);
 						this.ctx.clearRect(0, 0, width, height);
+						this.ctx.fillStyle = color_to_hex(color);
+						this.ctx.fillRect(0, 0, width, height);
 					},
 					get_delta_time: () => {
 					        return this.dt;
