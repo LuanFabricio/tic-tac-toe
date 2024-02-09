@@ -7,7 +7,7 @@ function make_environment(...envs) {
 					return env[prop];
 				}
 			}
-			return (...args) => {console.error("NOT IMPLEMENTED: "+prop, args)}
+			return (...args) => {console.error(`NOT IMPLEMENTED: ${prop} ${args}`)}
 		}
 	});
 }
@@ -40,6 +40,11 @@ class Game {
 		* @type {number[]}
 		* */
 		this.mouse_pos = [0, 0];
+		/** 
+		* @private 
+		* @type {boolean}
+		* */
+		this.mouse_clicked = false;
 		/** 
 		* @private 
 		* @type {CanvasRenderingContext2D | undefined}
@@ -84,6 +89,12 @@ class Game {
 		};
 		this.ctx.canvas.addEventListener("mousemove", mouseMove);
 
+		/** @param {MouseEvent} mouse */
+		const mouseClicked = (_) => {
+			this.mouse_clicked = true;
+		};
+		this.ctx.canvas.addEventListener("mousedown", mouseClicked);
+
 		/** @type {WebAssembly.WebAssemblyInstantiatedSource} */
 		this.wasm = await WebAssembly.instantiateStreaming(
 			fetch("./main.wasm"),
@@ -111,6 +122,13 @@ class Game {
 						this.ctx.strokeStyle = color_to_hex(color);
 						this.ctx.stroke();
 					},
+					draw_circle: (center_x, center_y, radius, color) => {
+						this.ctx.beginPath();
+						this.ctx.arc(center_x, center_y, radius, 0, 2 * Math.PI);
+						this.ctx.lineWidth = 1.75;
+						this.ctx.strokeStyle = color_to_hex(color);
+						this.ctx.stroke();
+					},
 					clear_window: (color) => {
 						const { width, height } = this.ctx.canvas;
 						this.ctx.clearRect(0, 0, width, height);
@@ -123,6 +141,7 @@ class Game {
 					begin_draw: () => {},
 					end_draw: () => {
 						this.keys.clear();
+						this.mouse_clicked = false;
 					},
 					is_key_pressed: (key_code) => {
 						return this.keys.has(key_code);
@@ -140,6 +159,7 @@ class Game {
 						console.log(x, y);
 						return [400, 300];
 					},
+					is_mouse_clicked: () => this.mouse_clicked,
 					get_mouse_pos_x: () => this.mouse_pos[0],
 					get_mouse_pos_y: () => this.mouse_pos[1],
 				}),
@@ -191,7 +211,7 @@ function cstr_len(mem, str) {
 
 /** 
 * @param {ArrayBuffer} buffer 
-* @param {str} number 
+* @param {number} str 
 * */
 function cstr_by_ptr(buffer, str) {
 	const mem = new Uint8Array(buffer);
