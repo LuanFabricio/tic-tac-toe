@@ -8,6 +8,11 @@
 #define KEY_RIGHT 'd'
 #define KEY_LEFT 'a'
 
+#define X_VAL 0
+#define O_VAL 1
+#define DRAW_VAL -1
+#define NONE_VAL -2
+
 #define CENTER_PADDING 150
 #define BOARD_MIN_X WIDTH/2-CENTER_PADDING
 #define BOARD_MAX_X WIDTH/2+CENTER_PADDING
@@ -56,6 +61,7 @@ extern int should_close();
 extern void draw_rectangle(int x, int y, int width, int height, int color);
 extern void draw_line(int x0, int y0, int x1, int y1, int color);
 extern void draw_circle(int center_x, int center_y, float radius, int color);
+extern void draw_text(const char *text, int x, int y, int font_size, int color);
 extern void set_game_loop_func(void (*func));
 extern void clear_window(int color);
 extern void begin_draw();

@@ -20,7 +20,47 @@ const int BACKGROUND_COLOR = 0xff000000;
 
 static Game game = {0};
 
-// TODO: Write game logic (win or draw)
+char is_valid_char(char c)
+{
+	return c != -1;
+}
+
+char get_winner()
+{
+	int i;
+	for (i = 0; i < 3; i++) {
+		// checking lines
+		if (is_valid_char(game.board[3*i]) && game.board[3*i] == game.board[3*i+1] && game.board[3*i] == game.board[3*i+2]) {
+			return game.board[3*i];
+		}
+
+		// checking columns
+		if (is_valid_char(game.board[i]) && game.board[i] == game.board[i+3] && game.board[i] == game.board[i+6]) {
+			return game.board[i];
+		}
+	}
+
+	if (is_valid_char(game.board[0]) && game.board[0] == game.board[4] && game.board[0] == game.board[8]) {
+		return game.board[0];
+	}
+
+	if (is_valid_char(game.board[2]) && game.board[2] == game.board[4] && game.board[2] == game.board[6]) {
+		return game.board[2];
+	}
+
+	for (i = 0; i < BOARD_SIZE; i++) {
+		if (game.board[i] == -1) {
+			break;
+		}
+	}
+	if (i == BOARD_SIZE) {
+		// Game draw
+		return DRAW_VAL;
+	}
+
+	// game is not over yet
+	return NONE_VAL;
+}
 
 int is_valid_board_pos(Vector2 point)
 {
@@ -64,9 +104,9 @@ void handle_click(Vector2 mouse)
 	}
 
 	if (game.is_x_turn) {
-		game.board[board_idx] = 0;
+		game.board[board_idx] = X_VAL;
 	} else {
-		game.board[board_idx] = 1;
+		game.board[board_idx] = O_VAL;
 	}
 
 	game.is_x_turn = !game.is_x_turn;
@@ -110,19 +150,43 @@ Vector2 get_mouse_pos()
 	return  (Vector2){ .x = mouse_x, .y = mouse_y };
 }
 
+void init_game()
+{
+	for (int i = 0; i < BOARD_SIZE; i++) {
+		game.board[i] = -1;
+	}
+	game.is_x_turn = 1;
+}
+
 void game_loop() {
 	Vector2 mouse = get_mouse_pos();
 	int board_index = mouse_to_board(mouse);
+	char w = get_winner();
 
-	if (is_mouse_clicked()) {
+	if (is_mouse_clicked() && w == NONE_VAL) {
 		handle_click(mouse);
+	}
+
+	if (is_key_pressed('r')) {
+		init_game();
 	}
 
 	begin_draw();
 
 	clear_window(BACKGROUND_COLOR);
+	switch (w) {
+		case DRAW_VAL:
+			draw_text("Draw!", WIDTH / 2 - 32, 15, 32, 0xff888888);
+			break;
+		case X_VAL:
+			draw_text("X wins!", WIDTH / 2 - 32, 15, 32, 0xff888888);
+			break;
+		case O_VAL:
+			draw_text("O wins!", WIDTH / 2 - 32, 15, 32, 0xff888888);
+			break;
+	}
 
-	if (board_index >= 0 && game.board[board_index] == -1) {
+	if (board_index >= 0 && game.board[board_index] == -1 && w == NONE_VAL) {
 		if (game.is_x_turn) {
 			draw_x(board_index, 0xff88ff88);
 		} else {
@@ -139,24 +203,16 @@ void game_loop() {
 		char current = game.board[i];
 
 		switch (current) {
-			case 0:
+			case X_VAL:
 				draw_x(i, 0xffffffff);
 				break;
-			case 1:
+			case O_VAL:
 				draw_o(i, 0xffffffff);
 				break;
 		}
 	}
 
 	end_draw();
-}
-
-void init_game()
-{
-	for (int i = 0; i < BOARD_SIZE; i++) {
-		game.board[i] = -1;
-	}
-	game.is_x_turn = 1;
 }
 
 int main(void)
