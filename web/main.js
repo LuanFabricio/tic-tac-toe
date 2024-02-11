@@ -129,6 +129,14 @@ class Game {
 						this.ctx.strokeStyle = color_to_hex(color);
 						this.ctx.stroke();
 					},
+					draw_text: (text_ptr, x, y, font_size, color) => {
+						const buffer = this.wasm.instance.exports.memory.buffer;
+						this.ctx.font = `${font_size}px Comic Sans MS`;
+						this.ctx.fillStyle = color_to_hex(color);
+
+						y += 32;
+						this.ctx.fillText(cstr_by_ptr(buffer, text_ptr), x, y);
+					},
 					clear_window: (color) => {
 						const { width, height } = this.ctx.canvas;
 						this.ctx.clearRect(0, 0, width, height);
