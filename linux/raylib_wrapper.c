@@ -29,6 +29,11 @@ void draw_circle(int center_x, int center_y, float radius, int color)
 	DrawCircleLines(center_x, center_y, radius, INT_TO_COLOR(color));
 }
 
+void draw_text(const char *text, int x, int y, int font_size, int color)
+{
+	DrawText(text, x, y, font_size, INT_TO_COLOR(color));
+}
+
 void set_game_loop_func(void (*func));
 
 void clear_window(int color)
@@ -48,6 +53,14 @@ void end_draw()
 
 int is_key_pressed(char key)
 {
+	if (key >= 65 && key <= 90) {
+		return IsKeyPressed(key);
+	}
+
+	if (key >= 97 && key <= 122) {
+		return IsKeyPressed(key-32);
+	}
+
 	return 0;
 }
 
