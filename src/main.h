@@ -62,6 +62,7 @@ extern void draw_rectangle(int x, int y, int width, int height, int color);
 extern void draw_line(int x0, int y0, int x1, int y1, int color);
 extern void draw_circle(int center_x, int center_y, float radius, int color);
 extern void draw_text(const char *text, int x, int y, int font_size, int color);
+extern int mesure_text(const char *text, int font_size);
 extern void set_game_loop_func(void (*func));
 extern void clear_window(int color);
 extern void begin_draw();

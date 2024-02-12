@@ -158,6 +158,26 @@ void init_game()
 	game.is_x_turn = 1;
 }
 
+void draw_winner(int w)
+{
+	char* text;
+	switch (w) {
+		case DRAW_VAL:
+			text = "Draw!";
+			break;
+		case X_VAL:
+			text = "X wins!";
+			break;
+		case O_VAL:
+			text = "O wins!";
+			break;
+	}
+
+	const int font = 32;
+	int text_width = mesure_text(text, font);
+	draw_text(text, (WIDTH - text_width) / 2, 15, 32, 0xff888888);
+}
+
 void game_loop() {
 	Vector2 mouse = get_mouse_pos();
 	int board_index = mouse_to_board(mouse);
@@ -174,16 +194,9 @@ void game_loop() {
 	begin_draw();
 
 	clear_window(BACKGROUND_COLOR);
-	switch (w) {
-		case DRAW_VAL:
-			draw_text("Draw!", WIDTH / 2 - 32, 15, 32, 0xff888888);
-			break;
-		case X_VAL:
-			draw_text("X wins!", WIDTH / 2 - 32, 15, 32, 0xff888888);
-			break;
-		case O_VAL:
-			draw_text("O wins!", WIDTH / 2 - 32, 15, 32, 0xff888888);
-			break;
+
+	if (w != NONE_VAL) {
+		draw_winner(w);
 	}
 
 	if (board_index >= 0 && game.board[board_index] == -1 && w == NONE_VAL) {
