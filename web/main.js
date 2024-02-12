@@ -137,6 +137,12 @@ class Game {
 						y += 32;
 						this.ctx.fillText(cstr_by_ptr(buffer, text_ptr), x, y);
 					},
+					mesure_text: (text_ptr, font_size) => {
+						const buffer = this.wasm.instance.exports.memory.buffer;
+						this.ctx.font = `${font_size}px Comic Sans MS`;
+						let res = this.ctx.measureText(cstr_by_ptr(buffer, text_ptr));
+						return res.width;
+					},
 					clear_window: (color) => {
 						const { width, height } = this.ctx.canvas;
 						this.ctx.clearRect(0, 0, width, height);
