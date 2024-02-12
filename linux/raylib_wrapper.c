@@ -34,6 +34,11 @@ void draw_text(const char *text, int x, int y, int font_size, int color)
 	DrawText(text, x, y, font_size, INT_TO_COLOR(color));
 }
 
+int mesure_text(const char *text, int font_size)
+{
+	return MeasureText(text, font_size);
+}
+
 void set_game_loop_func(void (*func));
 
 void clear_window(int color)
